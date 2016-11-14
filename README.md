@@ -22,7 +22,16 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+require 'multi_op_queue'
+
+queue = ::MutiOpQueue::Queue.new
+queue.push(1)
+queue.push(2)
+
+items = queue.pop_up_to(2)
+# [ 1, 2 ]
+```
 
 ## Development
 
