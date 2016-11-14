@@ -1,8 +1,9 @@
 # MultiOpQueue
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/multi_op_queue`. To experiment with that code, run `bin/console` for an interactive prompt.
+Pure Ruby implementation of a Queue (from ruby-2.0.0) which also support multi-value operations while retaining the lock that protects the queue
 
-TODO: Delete this and the text above, and describe your gem
+### Example
+`pop_up_to` will return an array of values from the queue (up to the number specified) with only a single acquisition of the lock
 
 ## Installation
 
