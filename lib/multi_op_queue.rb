@@ -47,7 +47,7 @@ module MultiOpQueue
     # Concatenates +ary+ onto the queue.
     #
     def concat(ary)
-      Thread.handle_interrupt(StandardError => :on_blocking) do
+      handle_interrupt do
         @mutex.synchronize do
           @que.concat ary
           @cond.signal
@@ -59,7 +59,7 @@ module MultiOpQueue
     # Pushes +obj+ to the queue.
     #
     def push(obj)
-      Thread.handle_interrupt(StandardError => :on_blocking) do
+      handle_interrupt do
         @mutex.synchronize do
           @que.push obj
           @cond.signal
@@ -83,7 +83,7 @@ module MultiOpQueue
     # thread isn't suspended, and an exception is raised.
     #
     def pop(non_block=false)
-      Thread.handle_interrupt(StandardError => :on_blocking) do
+      handle_interrupt do
         @mutex.synchronize do
           while true
             if @que.empty?
@@ -123,7 +123,7 @@ module MultiOpQueue
     # thread isn't suspended, and an exception is raised.
     #
     def pop_up_to(num_to_pop = 1, non_block=false)
-      Thread.handle_interrupt(StandardError => :on_blocking) do
+      handle_interrupt do
         @mutex.synchronize do
           while true
             if @que.empty?
@@ -176,6 +176,20 @@ module MultiOpQueue
     #
     def num_waiting
       @num_waiting
+    end
+
+    private
+
+    def handle_interrupt
+      @handle_interrupt = Thread.respond_to?(:handle_interrupt) if @handle_interrupt.nil?
+
+      if @handle_interrupt
+        Thread.handle_interrupt(StandardError => :on_blocking) do
+          yield
+        end
+      else
+        yield
+      end
     end
   end
 end
