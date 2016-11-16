@@ -5,6 +5,20 @@ describe ::MultiOpQueue::Queue do
     @queue = ::MultiOpQueue::Queue.new
   end
 
+  describe "#concat" do
+    it "pushes all of the array elements onto the queue" do
+      @queue.concat([1, 2, 3])
+      @queue.size.must_equal 3
+    end
+
+    it "keeps the order for pop of the array" do
+      @queue.concat([1, 2, 3])
+      @queue.pop.must_equal 1
+      @queue.pop.must_equal 2
+      @queue.pop.must_equal 3
+    end
+  end
+
   describe "#size" do
     it "returns 0 when queue is empty" do
       @queue.size.must_equal 0

@@ -44,6 +44,18 @@ module MultiOpQueue
     end
 
     #
+    # Concatenates +ary+ onto the queue.
+    #
+    def concat(ary)
+      Thread.handle_interrupt(StandardError => :on_blocking) do
+        @mutex.synchronize do
+          @que.concat ary
+          @cond.signal
+        end
+      end
+    end
+
+    #
     # Pushes +obj+ to the queue.
     #
     def push(obj)
