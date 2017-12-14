@@ -122,7 +122,15 @@ module MultiOpQueue
     # suspended until data is pushed onto the queue.  If +non_block+ is true, the
     # thread isn't suspended, and an exception is raised.
     #
-    def pop_up_to(num_to_pop = 1, non_block=false)
+    def pop_up_to(num_to_pop = 1, opts = {})
+      case opts
+      when TrueClass, FalseClass
+        non_bock = opts
+      when Hash
+        timeout = opts.fetch(:timeout, nil)
+        non_block = opts.fetch(:non_block, false)
+      end
+
       handle_interrupt do
         @mutex.synchronize do
           while true
@@ -132,7 +140,8 @@ module MultiOpQueue
               else
                 begin
                   @num_waiting += 1
-                  @cond.wait @mutex
+                  @cond.wait(@mutex, timeout)
+                  return nil if @que.empty?
                 ensure
                   @num_waiting -= 1
                 end

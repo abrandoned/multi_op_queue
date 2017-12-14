@@ -49,5 +49,18 @@ describe ::MultiOpQueue::Queue do
 
       @queue.pop_up_to(3).must_equal [1, 1, 1]
     end
+
+    it "supports an optional timeout" do
+      start = Time.now.to_f
+      @queue.pop_up_to(5, timeout: 0.1).must_be_nil
+      (Time.now.to_f - start).must_be_within_delta(0.1, 0.01)
+    end
+
+    it "blocks until items are available" do
+      start = Time.now.to_f
+      Thread.new { sleep 0.1; @queue.push(3) }
+      @queue.pop_up_to(5, timeout: 0.5).must_equal [3]
+      (Time.now.to_f - start).must_be_within_delta(0.1, 0.01)
+    end
   end
 end
