@@ -12,6 +12,7 @@ Gem::Specification.new do |spec|
   spec.summary       = %q{ allow multi-op calls on Queue while holding lock }
   spec.description   = %q{ take default Queue from Ruby and allow multiple operations while holding lock }
   spec.homepage      = "https://github.com/abrandoned/multi_op_queue"
+  spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
